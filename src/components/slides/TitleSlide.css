@@ -4,11 +4,16 @@
     align-items: center;
     text-align: center;
     padding: 2rem 0;
+    background: url('/path/to/your/background-image.jpg') no-repeat center center fixed;
+    background-size: cover;
   }
   
   .title-content {
     max-width: 800px;
     margin: 0 auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 40px;
+    border-radius: 10px;
   }
   
   .title-main {
@@ -115,4 +120,19 @@
     .title-description {
       font-size: 1rem;
     }
+  }
+
+  .title-main-heading {
+    color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  }
+  
+  .title-tagline,
+  .title-description,
+  .title-instruction,
+  .title-call-to-action {
+    color: #f0f0f0;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+    line-height: 1.6;
+    margin-bottom: 1em;
   }

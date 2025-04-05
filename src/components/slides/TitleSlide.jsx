@@ -6,19 +6,19 @@ const TitleSlide = ({ onStart }) => {
   return (
     <div className="title-slide">
       <div className="title-content">
-        <h1 className="title-main">銀河ファミリー＆一靈四魂</h1>
-        <h2 className="title-sub">宇宙と古神道から紐解く、あなたの本質診断</h2>
+        <h1 className="title-main-heading">銀河ファミリー＆一靈四魂診断</h1>
+        <p className="title-tagline">宇宙と古神道から紐解く、あなたの本質</p>
         
-        <div className="title-description">
-          <p>
+        <div className="title-description-box">
+          <p className="title-description">
             古神道の「一靈四魂」の考え方と銀河文明の知恵を融合した、
             あなたの魂の特性を診断するツールです。
           </p>
-          <p>
+          <p className="title-instruction">
             50の質問に答えることで、あなたの銀河種族と一靈四魂タイプ、
             そして「直靈」と「曲靈」のバランスを知ることができます。
           </p>
-          <p>
+          <p className="title-call-to-action">
             あなたの本来の輝きを取り戻すヒントを見つけましょう。
           </p>
         </div>
@@ -50,7 +50,7 @@ const TitleSlide = ({ onStart }) => {
         </div>
         
         <div className="title-start">
-          <Button onClick={onStart} type="primary">
+          <Button onClick={onStart} type="primary" size="large">
             診断を始める
           </Button>
         </div>
