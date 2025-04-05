@@ -1,7 +1,13 @@
 import React from 'react';
 import './Footer.css';
 
+/**
+ * アプリケーションのフッターコンポーネント
+ * @returns {JSX.Element} フッター要素
+ */
 const Footer = () => {
+  const currentYear = new Date().getFullYear(); // 現在の年を取得
+
   return (
     <footer className="app-footer">
       <div className="footer-content">
@@ -16,7 +22,7 @@ const Footer = () => {
         </div>
         
         <div className="footer-copyright">
-          <p>&copy; {new Date().getFullYear()} グレイトヒーローズジャーニー. All rights reserved.</p>
+          <p>&copy; {currentYear} GREAT HERO'S JOURNEY. All rights reserved.</p>
         </div>
       </div>
     </footer>
