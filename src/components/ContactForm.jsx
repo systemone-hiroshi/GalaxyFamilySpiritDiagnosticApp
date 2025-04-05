@@ -87,21 +87,24 @@ const ContactForm = () => {
     <div className="contact-form-container">
       <h2>お問い合わせ</h2>
       <p>診断に関するご質問や、サービスについてのお問い合わせはこちらからどうぞ。</p>
-      {/* Google Form 送信用に action, method, target を設定 */}
       <form
-        ref={formRef} // 参照を設定
+        ref={formRef}
         className="contact-form"
         onSubmit={handleSubmit}
         action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSeRrM4_A7QTegaA7IgKjPBxg72TojfO4JzDDK7rCO6X6ggyPQ/formResponse"
         method="POST"
-        target="hidden_iframe" // iframeをターゲットに指定
+        target="hidden_iframe"
       >
+        <input type="hidden" name="fvv" value="1" />
+        <input type="hidden" name="partialResponse" value='[null,null,"4921373502918840604"]' />
+        <input type="hidden" name="pageHistory" value="0" />
+        <input type="hidden" name="fbzx" value="4921373502918840604" />
+
         <div className="form-group">
           <label htmlFor="name">お名前<span className="required">*</span></label>
           <input
             type="text"
             id="name"
-            // Google Form の name 属性に変更
             name="entry.1912207169"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -114,9 +117,8 @@ const ContactForm = () => {
         <div className="form-group">
           <label htmlFor="email">メールアドレス<span className="required">*</span></label>
           <input
-            type="email" // emailタイプの方が適切
+            type="email"
             id="email"
-             // Google Form の name 属性に変更
             name="entry.225433882"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -131,7 +133,6 @@ const ContactForm = () => {
           <label htmlFor="message">お問い合わせ内容<span className="required">*</span></label>
           <textarea
             id="message"
-             // Google Form の name 属性に変更
             name="entry.664562810"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
@@ -148,12 +149,11 @@ const ContactForm = () => {
           送信する
         </Button>
       </form>
-      {/* 送信処理用の非表示 iframe */}
       <iframe
         name="hidden_iframe"
         id="hidden_iframe"
         style={{ display: 'none' }}
-        onLoad={handleIframeLoad} // iframe のロード完了時に handleIframeLoad を呼び出す
+        onLoad={handleIframeLoad}
         title="hidden iframe for google form submission"
       ></iframe>
     </div>
