@@ -29,39 +29,42 @@ const RadarChart = ({ data, width = 500, height = 500 }) => {
   // スマートフォン向けに最適化されたサイズ計算
   const getOptimizedSize = () => {
     if (windowWidth < 480) {
-      return { width: 320, height: 320 };
+      return { width: 320, height: 320, fontSize: '8px', hoverFontSize: '10px', labelPadding: 1.25 };
     } else if (windowWidth < 768) {
-      return { width: 400, height: 400 };
+      return { width: 400, height: 400, fontSize: '9px', hoverFontSize: '11px', labelPadding: 1.2 };
     }
-    return { width, height };
+    return { width, height, fontSize: '10px', hoverFontSize: '12px', labelPadding: 1.18 };
   };
   
   // データが変更されたときにチャートを描画
   useEffect(() => {
     if (!data || data.length === 0) return;
     
-    const { width: optimizedWidth, height: optimizedHeight } = getOptimizedSize();
-    drawChart(optimizedWidth, optimizedHeight);
+    const { width: optimizedWidth, height: optimizedHeight, fontSize, hoverFontSize, labelPadding } = getOptimizedSize();
+    drawChart(optimizedWidth, optimizedHeight, fontSize, hoverFontSize, labelPadding);
   }, [data, windowWidth]);
   
   /**
    * チャートを描画する関数
    * @param {number} chartWidth チャートの幅
    * @param {number} chartHeight チャートの高さ
+   * @param {string} baseFontSize 基本のフォントサイズ
+   * @param {string} hoverFontSize ホバー時のフォントサイズ
+   * @param {number} labelPadding ラベルと軸の間のパディング係数
    */
-  const drawChart = (chartWidth, chartHeight) => {
+  const drawChart = (chartWidth, chartHeight, baseFontSize, hoverFontSize, labelPadding) => {
     // SVGコンテナをクリア
     d3.select(svgRef.current).selectAll("*").remove();
     
-    // マージンの設定
-    const margin = { top: 50, right: 50, bottom: 50, left: 50 };
+    // マージンの設定 (ラベル表示領域を考慮して少し広めに)
+    const margin = { top: 60, right: 60, bottom: 60, left: 60 };
     const innerWidth = chartWidth - margin.left - margin.right;
     const innerHeight = chartHeight - margin.top - margin.bottom;
     
     // 中心と半径の計算
     const centerX = innerWidth / 2;
     const centerY = innerHeight / 2;
-    const radius = Math.min(centerX, centerY);
+    const radius = Math.min(centerX, centerY) * 0.9; // 少し内側に描画
     
     // SVGの設定
     const svg = d3.select(svgRef.current)
@@ -75,7 +78,7 @@ const RadarChart = ({ data, width = 500, height = 500 }) => {
     // チャートタイトルの追加
     svg.append("text")
       .attr("x", 0)
-      .attr("y", -radius - 20)
+      .attr("y", -radius - margin.top / 2) // タイトル位置調整
       .attr("text-anchor", "middle")
       .style("font-size", "16px")
       .style("font-weight", "bold")
@@ -95,7 +98,7 @@ const RadarChart = ({ data, width = 500, height = 500 }) => {
     // 凡例の追加
     const legend = svg.append("g")
       .attr("class", "legend")
-      .attr("transform", `translate(${radius * 0.7}, ${-radius * 0.9})`);
+      .attr("transform", `translate(${radius * 0.7}, ${-radius * 1.0 - 10})`); // 凡例位置調整
     
     categories.forEach((category, i) => {
       const legendRow = legend.append("g")
@@ -164,34 +167,52 @@ const RadarChart = ({ data, width = 500, height = 500 }) => {
     
     // 軸のラベルを追加
     axis.append("text")
-      .attr("class", "legend")
-      .style("font-size", d => windowWidth < 480 ? "8px" : "10px")
+      .attr("class", "legend axis-label") // クラス追加 for styling/selection
+      .style("font-size", baseFontSize) // 適用
       .attr("text-anchor", (d, i) => {
         const angle = angleSlice * i - Math.PI / 2;
-        if (Math.abs(angle) < 0.1 || Math.abs(angle - Math.PI) < 0.1) {
-          return "middle";
-        } else if (angle > -Math.PI / 2 && angle < Math.PI / 2) {
-          return "start";
-        } else {
-          return "end";
+        const angleDeg = angle * (180 / Math.PI);
+        
+        // 角度に応じてアンカーを微調整
+        if (Math.abs(angleDeg - 90) < 10 || Math.abs(angleDeg - 270) < 10) { // 左右の軸に近い場合
+            return "middle";
+        } else if (angleDeg > -90 && angleDeg < 90) { // 右半分の軸
+            return "start";
+        } else { // 左半分の軸
+            return "end";
         }
       })
-      .attr("dy", (d, i) => {
+      .attr("dy", (d, i) => { // 垂直方向のオフセット調整
         const angle = angleSlice * i - Math.PI / 2;
-        if (Math.abs(angle) < Math.PI / 6 || Math.abs(angle - Math.PI) < Math.PI / 6) {
-          return angle < 0 ? "-0.7em" : "1.5em";
-        } else {
-          return "0.4em";
+        const angleDeg = angle * (180 / Math.PI);
+        
+        if (Math.abs(angleDeg - 0) < 10 || Math.abs(angleDeg - 180) < 10) { // 上下の軸に近い場合
+            return angleDeg < 0 ? "-0.9em" : "1.8em"; // 上下の軸のオフセットを増やす
+        } else if (Math.abs(angleDeg - 90) < 10 || Math.abs(angleDeg - 270) < 10) { // 左右の軸に近い場合
+            return "0.4em"; // 左右の軸は微調整
         }
+         else {
+            return "0.4em"; // デフォルト
+        }
+      })
+      .attr("dx", (d, i) => { // 水平方向のオフセット調整 (左右の軸用)
+        const angle = angleSlice * i - Math.PI / 2;
+        const angleDeg = angle * (180 / Math.PI);
+         if (Math.abs(angleDeg - 90) < 10) { // 右の軸に近い場合
+             return "0.5em";
+         } else if (Math.abs(angleDeg - 270) < 10) { // 左の軸に近い場合
+             return "-0.5em";
+         }
+         return "0";
       })
       .attr("x", (d, i) => {
         const angle = angleSlice * i - Math.PI / 2;
-        const labelDistance = radius * 1.15;
+        const labelDistance = radius * labelPadding; // 適用
         return labelDistance * Math.cos(angle);
       })
       .attr("y", (d, i) => {
         const angle = angleSlice * i - Math.PI / 2;
-        const labelDistance = radius * 1.15;
+        const labelDistance = radius * labelPadding; // 適用
         return labelDistance * Math.sin(angle);
       })
       .text(d => d.axis)
@@ -202,14 +223,14 @@ const RadarChart = ({ data, width = 500, height = 500 }) => {
         d3.select(event.currentTarget)
           .transition()
           .duration(200)
-          .style("font-size", windowWidth < 480 ? "10px" : "12px");
+          .style("font-size", hoverFontSize); // 適用
       })
       .on("mouseout", (event) => {
         setActiveAxis(null);
         d3.select(event.currentTarget)
           .transition()
           .duration(200)
-          .style("font-size", windowWidth < 480 ? "8px" : "10px");
+          .style("font-size", baseFontSize); // 適用
       });
     
     // レーダーチャート本体の描画
@@ -251,83 +272,16 @@ const RadarChart = ({ data, width = 500, height = 500 }) => {
       .attr("cx", d => d.value * radius * Math.cos(d.angle))
       .attr("cy", d => d.value * radius * Math.sin(d.angle))
       .style("fill", d => colorScale(d.category))
-      .style("stroke", "#fff")
-      .style("stroke-width", 1)
-      .on("mouseover", (event, d) => {
-        // ツールチップの表示
-        const tooltip = svg.append("g")
-          .attr("class", "tooltip")
-          .attr("transform", `translate(${d.value * radius * Math.cos(d.angle)}, ${d.value * radius * Math.sin(d.angle)})`);
-        
-        tooltip.append("rect")
-          .attr("x", 10)
-          .attr("y", -15)
-          .attr("width", 120)
-          .attr("height", 30)
-          .attr("rx", 5)
-          .attr("ry", 5)
-          .style("fill", "rgba(255, 255, 255, 0.9)")
-          .style("stroke", colorScale(d.category));
-        
-        tooltip.append("text")
-          .attr("x", 15)
-          .attr("y", 0)
-          .text(`${d.axis}: ${Math.round(d.value * 100)}%`)
-          .style("font-size", "12px");
-        
-        // 点を強調
-        d3.select(event.currentTarget)
-          .transition()
-          .duration(200)
-          .attr("r", 6);
-      })
-      .on("mouseout", (event) => {
-        // ツールチップを削除
-        svg.selectAll(".tooltip").remove();
-        
-        // 点のサイズを元に戻す
-        d3.select(event.currentTarget)
-          .transition()
-          .duration(200)
-          .attr("r", 4);
-      });
+      .style("fill-opacity", 0.8)
+      .append("title") // ツールチップ用
+      .text(d => `${d.axis}: ${Math.round(d.value * 100)}%`);
     
-    // 不可視の相互作用レイヤー
-    svg.selectAll(".radarInvisibleCircle")
-      .data(radarData)
-      .enter().append("circle")
-      .attr("class", "radarInvisibleCircle")
-      .attr("r", 15)
-      .attr("cx", d => d.value * radius * Math.cos(d.angle))
-      .attr("cy", d => d.value * radius * Math.sin(d.angle))
-      .style("fill", "none")
-      .style("pointer-events", "all")
-      .on("mouseover", (event, d) => {
-        // 同じイベントを対応する可視円に転送
-        const visibleCircles = svg.selectAll(".radarCircle").nodes();
-        const index = radarData.findIndex(rd => rd.axis === d.axis);
-        if (index >= 0 && index < visibleCircles.length) {
-          const event = new MouseEvent('mouseover', {
-            view: window,
-            bubbles: true,
-            cancelable: true
-          });
-          visibleCircles[index].dispatchEvent(event);
-        }
-      })
-      .on("mouseout", (event, d) => {
-        // 同じイベントを対応する可視円に転送
-        const visibleCircles = svg.selectAll(".radarCircle").nodes();
-        const index = radarData.findIndex(rd => rd.axis === d.axis);
-        if (index >= 0 && index < visibleCircles.length) {
-          const event = new MouseEvent('mouseout', {
-            view: window,
-            bubbles: true,
-            cancelable: true
-          });
-          visibleCircles[index].dispatchEvent(event);
-        }
-      });
+    // アクティブな軸の強調表示 (オプション)
+    if (activeAxis) {
+       svg.selectAll('.axis-label')
+         .filter(d => d.axis === activeAxis)
+         .style('fill', 'black'); // または他の強調スタイル
+    }
   };
   
   // アクセシビリティのためのテーブル表示

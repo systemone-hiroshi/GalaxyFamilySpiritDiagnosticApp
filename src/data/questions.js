@@ -125,28 +125,28 @@ export const questions = [
       id: 17,
       text: "対立する意見や価値観の統合点を見出すことができる",
       galaxyType: "オリオン",
-      soulType: "複合的",
+      soulType: "全般",
       directSpirituality: true
     },
     {
       id: 18,
       text: "内なる闇と光の両面を受け入れることができる",
       galaxyType: "オリオン",
-      soulType: "複合的",
+      soulType: "全般",
       directSpirituality: true
     },
     {
       id: 19,
       text: "物事を極端な二元論（善悪・白黒）で捉えがちである",
       galaxyType: "オリオン",
-      soulType: "複合的",
+      soulType: "全般",
       directSpirituality: false
     },
     {
       id: 20,
       text: "過去のトラウマや傷に囚われることがある",
       galaxyType: "オリオン",
-      soulType: "複合的",
+      soulType: "全般",
       directSpirituality: false
     },
     
@@ -155,28 +155,28 @@ export const questions = [
       id: 21,
       text: "創造的な表現や芸術的活動に喜びを感じる",
       galaxyType: "アンドロメダ",
-      soulType: "複合的",
+      soulType: "全般",
       directSpirituality: true
     },
     {
       id: 22,
       text: "他者の心の傷を癒す能力を持っていると感じる",
       galaxyType: "アンドロメダ",
-      soulType: "複合的",
+      soulType: "全般",
       directSpirituality: true
     },
     {
       id: 23,
       text: "理想と現実のギャップに苦しむことがある",
       galaxyType: "アンドロメダ",
-      soulType: "複合的",
+      soulType: "全般",
       directSpirituality: false
     },
     {
       id: 24,
       text: "現実世界の問題から逃避したいと感じることがある",
       galaxyType: "アンドロメダ",
-      soulType: "複合的",
+      soulType: "全般",
       directSpirituality: false
     },
     
