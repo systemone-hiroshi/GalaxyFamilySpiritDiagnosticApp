@@ -6,6 +6,7 @@ import { saveImage } from '../../utils/saveImage';
 import ContactForm from '../ContactForm';
 import DetailedAnalysisSlide from './DetailedAnalysisSlide';
 import './ResultSlide.css';
+import html2canvas from 'html2canvas';
 
 const ResultSlide = ({ results, onReset }) => {
   const resultRef = useRef(null);
@@ -28,6 +29,25 @@ const ResultSlide = ({ results, onReset }) => {
   const handleSaveImage = () => {
     if (resultRef.current) {
       saveImage(resultRef.current, `銀河ファミリー＆一靈四魂診断結果_${dominantGalaxyType}_${dominantSoulType}`);
+    }
+  };
+  
+  const handleDownloadImage = () => {
+    const elementToCapture = resultRef.current;
+    if (elementToCapture) {
+      html2canvas(elementToCapture, {
+        scale: 2,
+      }).then((canvas) => {
+        const image = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.href = image;
+        link.download = '診断結果.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }).catch(err => {
+        console.error("画像生成エラー:", err);
+      });
     }
   };
   
