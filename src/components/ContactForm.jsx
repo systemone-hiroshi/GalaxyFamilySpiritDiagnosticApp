@@ -75,10 +75,9 @@ const ContactForm = () => {
         <h2>お問い合わせありがとうございます</h2>
         <p>内容を確認の上、担当者よりご連絡いたします。</p>
         <p>（返信不要と入力された場合、ご連絡はいたしません）</p>
-        {/* 必要であればリセットボタンなどを追加 */}
-         <Button onClick={() => { setIsSubmitted(false); /* 必要なら他のstateもリセット */ }} type="secondary">
-           別の内容で問い合わせる
-         </Button>
+        <Button onClick={() => { setIsSubmitted(false); setFormSubmitting(false); /* stateをリセット */ }} type="secondary">
+          別の内容で問い合わせる
+        </Button>
       </div>
     );
   }
@@ -145,7 +144,7 @@ const ContactForm = () => {
 
         {status && <p className={`status-message ${errors && Object.keys(errors).length > 0 ? 'error' : ''}`}>{status}</p>}
 
-        <Button type="submit" disabled={formSubmitting && !isSubmitted}>
+        <Button type="submit" disabled={formSubmitting}>
           送信する
         </Button>
       </form>
