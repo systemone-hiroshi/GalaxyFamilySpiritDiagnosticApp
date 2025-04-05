@@ -198,6 +198,11 @@ const ResultSlide = ({ results, onReset }) => {
             <p>あなたの魂の特性を知り、より輝かせるためのヒントとして活用してください。</p>
           </div>
         </div>
+
+        <div className="copyright-footer">
+          &copy; {new Date().getFullYear()} GREAT HERO'S JOURNEY. All rights reserved.
+        </div>
+
       </div>
       
       <div className="result-actions">
