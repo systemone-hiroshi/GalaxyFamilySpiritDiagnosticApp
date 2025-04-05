@@ -33,17 +33,19 @@ const ContactForm = () => {
     }
     if (!message.trim()) newErrors.message = 'お問い合わせ内容は必須です。';
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    const isValid = Object.keys(newErrors).length === 0;
+    console.log(`Validation result: ${isValid ? 'Valid' : 'Invalid'}`);
+    return isValid;
   };
 
   // iframe のロード完了ハンドラ
   const handleIframeLoad = () => {
     console.log(`handleIframeLoad called. Current formSubmitting: ${formSubmitting}`); // ★ デバッグ
     if (formSubmitting) {
-      console.log('Setting isSubmitted to true and formSubmitting to false.'); // ★ デバッグ
+      console.log('Setting isSubmitted to true, status to "送信しました", and formSubmitting to false.');
       setIsSubmitted(true);
       setStatus('送信しました');
-      setFormSubmitting(false); // フラグをリセット
+      setFormSubmitting(false);
     } else {
       console.log('Initial iframe load, ignoring.'); // ★ デバッグ
     }
@@ -58,12 +60,12 @@ const ContactForm = () => {
     if (!validateForm()) {
       event.preventDefault();
       setStatus('入力内容にエラーがあります。');
-      console.log('Validation failed.'); // ★ デバッグ
+      console.log('Validation failed. Submission prevented.');
       return;
     }
 
-    console.log('Validation successful. Setting formSubmitting to true.'); // ★ デバッグ
-    setFormSubmitting(true); // 送信試行フラグを立てる
+    console.log('Validation successful. Setting formSubmitting flag AND status to "送信中..."');
+    setFormSubmitting(true);
     setStatus('送信中...');
     console.log('Allowing default form submission...'); // ★ デバッグ
     // event.preventDefault() は呼び出さない
@@ -79,8 +81,7 @@ const ContactForm = () => {
         <Button onClick={() => {
           console.log('Resetting form state.'); // ★ デバッグ
           setIsSubmitted(false);
-          setFormSubmitting(false); // 確実にリセット
-          // 必要なら入力フィールドもクリア
+          setFormSubmitting(false);
           setName('');
           setEmail('');
           setMessage('');
@@ -94,7 +95,7 @@ const ContactForm = () => {
   }
 
   // ★ デバッグ: レンダリング時の formSubmitting の値を確認
-  console.log(`Rendering form. formSubmitting: ${formSubmitting}, Button disabled: ${formSubmitting}`);
+  console.log(`Rendering form. Status: "${status}", Button disabled: ${status === '送信中...'}`);
 
   return (
     <div className="contact-form-container">
@@ -156,9 +157,9 @@ const ContactForm = () => {
           {errors.message && <span className="error-message">{errors.message}</span>}
         </div>
 
-        {status && <p className={`status-message ${errors && Object.keys(errors).length > 0 ? 'error' : ''}`}>{status}</p>}
+        {status && <p className={`status-message ${status === '入力内容にエラーがあります。' ? 'error' : ''}`}>{status}</p>}
 
-        <Button type="submit" disabled={formSubmitting}>
+        <Button type="submit" disabled={status === '送信中...'}>
           送信する
         </Button>
       </form>
