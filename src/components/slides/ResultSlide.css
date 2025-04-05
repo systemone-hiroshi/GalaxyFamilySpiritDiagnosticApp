@@ -8,6 +8,8 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     margin-bottom: 2rem;
+    max-width: 1200px;
+    background-color: #ffffff;
   }
   
   .result-header {
@@ -284,4 +286,25 @@
     .characteristic-lists {
       flex-direction: column;
     }
+  }
+
+  /* 画像化する際に、このエリアのコンテンツをカラム分割する */
+  .result-content-for-capture {
+    padding: 20px;
+    column-width: 450px;
+    column-gap: 40px;
+    background-color: #ffffff;
+  }
+
+  /* カラム内で改ページされたくない主要なセクションを指定 */
+  .result-content-for-capture > .result-main,
+  .result-content-for-capture > .result-details,
+  .result-content-for-capture > .result-footer,
+  .result-content-for-capture .result-summary,
+  .result-content-for-capture .result-chart,
+  .result-content-for-capture .characteristics,
+  .result-content-for-capture .axis-balance,
+  .result-content-for-capture .advice-section {
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
