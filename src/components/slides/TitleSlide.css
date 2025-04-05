@@ -1,0 +1,118 @@
+.title-slide {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2rem 0;
+  }
+  
+  .title-content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .title-main {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #FF9966 0%, #FF7733 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .title-sub {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    color: #666;
+  }
+  
+  .title-description {
+    margin-bottom: 3rem;
+    font-size: 1.1rem;
+    line-height: 1.7;
+  }
+  
+  .title-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    margin-bottom: 3rem;
+  }
+  
+  .feature {
+    display: flex;
+    align-items: flex-start;
+    max-width: 350px;
+    text-align: left;
+    padding: 1.5rem;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .feature:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+  
+  .feature-icon {
+    font-size: 2.5rem;
+    margin-right: 1rem;
+    flex-shrink: 0;
+  }
+  
+  .feature-text h3 {
+    margin-bottom: 0.5rem;
+    color: var(--primary-dark);
+  }
+  
+  .feature-text p {
+    margin-bottom: 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+  
+  .title-start {
+    margin-top: 2rem;
+  }
+  
+  .title-start button {
+    padding: 1rem 3rem;
+    font-size: 1.2rem;
+  }
+  
+  @media (max-width: 768px) {
+    .title-main {
+      font-size: 2.5rem;
+    }
+    
+    .title-sub {
+      font-size: 1.25rem;
+    }
+    
+    .title-features {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .feature {
+      max-width: 100%;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .title-main {
+      font-size: 2rem;
+    }
+    
+    .title-sub {
+      font-size: 1rem;
+    }
+    
+    .title-description {
+      font-size: 1rem;
+    }
+  }

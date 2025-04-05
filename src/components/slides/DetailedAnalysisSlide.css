@@ -1,0 +1,263 @@
+.detailed-analysis-slide {
+    padding: 2rem 0;
+  }
+  
+  .detailed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  
+  .detailed-header h1 {
+    margin: 0;
+    text-align: center;
+    flex-grow: 1;
+  }
+  
+  .back-icon {
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+  }
+  
+  .detailed-main {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+  
+  .detailed-main section {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+  }
+  
+  .detailed-main h2 {
+    color: var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.5rem;
+    margin-top: 0;
+  }
+  
+  /* 主要関係性セクション */
+  .relationship-card {
+    background-color: var(--light-bg);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .relationship-header {
+    background: linear-gradient(135deg, #FF9966 0%, #FF7733 100%);
+    color: white;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .relationship-header h3 {
+    margin: 0;
+    color: white;
+  }
+  
+  .compatibility-meter {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .meter-label {
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+  
+  .meter {
+    width: 100px;
+    height: 12px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  
+  .meter-fill {
+    height: 100%;
+    background-color: white;
+    border-radius: 6px;
+    transition: width 1s ease;
+  }
+  
+  .meter-value {
+    font-weight: bold;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+  
+  .relationship-content {
+    padding: 1.5rem;
+  }
+  
+  .relationship-content h4 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+  }
+  
+  .relationship-content h4:first-child {
+    margin-top: 0;
+  }
+  
+  /* 副次的タイプセクション */
+  .secondary-types-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .secondary-type {
+    background-color: var(--light-bg);
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .type-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0.5rem 0 1rem;
+  }
+  
+  .complementary-pattern {
+    background-color: var(--light-bg);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-top: 1.5rem;
+  }
+  
+  .complementary-pattern h3 {
+    margin-top: 0;
+    color: var(--primary-color);
+  }
+  
+  /* バランス分析セクション */
+  .balance-chart-container {
+    margin-top: 1.5rem;
+  }
+  
+  .balance-descriptions {
+    margin-top: 1.5rem;
+  }
+  
+  .balance-description {
+    margin-bottom: 1rem;
+  }
+  
+  .balance-description h4 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+  }
+  
+  /* 統合ポテンシャルセクション */
+  .potential-meter {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .potential-meter .meter {
+    flex-grow: 1;
+    height: 24px;
+    background-color: #f0f0f0;
+    border-radius: 12px;
+  }
+  
+  .potential-meter .meter-fill {
+    height: 100%;
+    border-radius: 12px;
+  }
+  
+  .potential-meter .meter-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  /* 魂の成長段階セクション */
+  .growth-stage-card {
+    background-color: var(--light-bg);
+    padding: 1.5rem;
+    border-radius: 8px;
+  }
+  
+  .growth-stage-card h3 {
+    color: var(--primary-color);
+    margin-top: 0;
+  }
+  
+  /* 直靈への道筋セクション */
+  .path-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  .path-item {
+    display: flex;
+    gap: 1rem;
+    background-color: var(--light-bg);
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  
+  .path-number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 28px;
+    height: 28px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    font-weight: bold;
+    flex-shrink: 0;
+  }
+  
+  .path-item p {
+    margin: 0;
+  }
+  
+  /* 成長の方向性セクション */
+  .growth-card {
+    background-color: var(--light-bg);
+    padding: 1.5rem;
+    border-radius: 8px;
+  }
+  
+  .detailed-footer {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+  }
+  
+  @media (max-width: 768px) {
+    .relationship-header {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    
+    .secondary-types-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .potential-meter {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .detailed-main section {
+      padding: 1.5rem;
+    }
+  }
