@@ -1,193 +1,154 @@
 // /src/components/ContactForm.jsx
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Button from './UI/Button';
+import './ContactForm.css';
 
+/**
+ * お問い合わせフォームコンポーネント
+ * @returns {JSX.Element} お問い合わせフォーム
+ */
 const ContactForm = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
-  const [formStatus, setFormStatus] = useState({
-    submitted: false,
-    error: false,
-    message: ''
-  });
-  
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [status, setStatus] = useState('');
+  const [errors, setErrors] = useState({});
+  const [isSubmitted, setIsSubmitted] = useState(false); // 送信完了状態を追加
+  const formRef = useRef(null); // フォームへの参照
+
+  // バリデーション関数
+  const validateForm = () => {
+    const newErrors = {};
+    if (!name.trim()) newErrors.name = 'お名前は必須です。';
+    if (!email.trim()) {
+      newErrors.email = 'メールアドレスは必須です。';
+    } else if (!/\S+@\S+\.\S+/.test(email) && email !== '返信不要') { // 「返信不要」を許可
+      newErrors.email = '有効なメールアドレスを入力してください。';
+    }
+    if (!message.trim()) newErrors.message = 'お問い合わせ内容は必須です。';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
-  
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    // バリデーション
-    if (!formData.name || !formData.email || !formData.message) {
-      setFormStatus({
-        submitted: false,
-        error: true,
-        message: '全ての項目を入力してください'
-      });
+
+  // iframe のロード完了ハンドラ
+  const handleIframeLoad = () => {
+    console.log('iframe loaded, assuming submission complete.');
+    setIsSubmitted(true); // 送信完了状態にする
+    setStatus('送信しました'); // オプション: ステータスメッセージ
+    // フォームの入力をクリア（任意）
+    // setName('');
+    // setEmail('');
+    // setMessage('');
+  };
+
+
+  // フォーム送信処理 (Googleフォームへの送信はHTMLのactionに任せる)
+  const handleSubmit = (event) => {
+    setStatus(''); // ステータスクリア
+    if (!validateForm()) {
+      event.preventDefault(); // バリデーションエラー時は送信を停止
+      setStatus('入力内容にエラーがあります。');
       return;
     }
-    
-    // メール形式の簡易チェック
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      setFormStatus({
-        submitted: false,
-        error: true,
-        message: '有効なメールアドレスを入力してください'
-      });
-      return;
-    }
-    
-    // 実際のプロジェクトではここにAPIリクエストを追加
-    // ここではモックの成功レスポンスを返す
-    setTimeout(() => {
-      setFormStatus({
-        submitted: true,
-        error: false,
-        message: 'お問い合わせありがとうございます。メッセージを受け付けました。'
-      });
-      
-      // フォームをリセット
-      setFormData({
-        name: '',
-        email: '',
-        message: ''
-      });
-    }, 1000);
+    // バリデーションが通れば、デフォルトのフォーム送信を実行させる
+    // そのため event.preventDefault() はここでは呼び出さない
+    setStatus('送信中...'); // 送信中の表示（実際にはiframeがロードされるまで）
+    console.log('Form validation passed, submitting to Google Forms via iframe...');
+
+    // 注意: ここでは event.preventDefault() を呼び出さないことで、
+    // form タグの action と target に基づく標準の送信が行われるようにします。
+    // 従来のfetchやAPI送信は不要です。
   };
-  
+
+
+  // 送信完了メッセージを表示
+  if (isSubmitted) {
+    return (
+      <div className="contact-form-container submitted">
+        <h2>お問い合わせありがとうございます</h2>
+        <p>内容を確認の上、担当者よりご連絡いたします。</p>
+        <p>（返信不要と入力された場合、ご連絡はいたしません）</p>
+        {/* 必要であればリセットボタンなどを追加 */}
+         <Button onClick={() => setIsSubmitted(false)} type="secondary">
+           別の内容で問い合わせる
+         </Button>
+      </div>
+    );
+  }
+
   return (
-    <div className="contact-form">
-      {formStatus.submitted ? (
-        <div className="form-success">
-          <h4>送信完了</h4>
-          <p>{formStatus.message}</p>
-          <Button 
-            onClick={() => setFormStatus(prev => ({ ...prev, submitted: false }))}
-            type="secondary"
-          >
-            新しいお問い合わせ
-          </Button>
+    <div className="contact-form-container">
+      <h2>お問い合わせ</h2>
+      <p>診断に関するご質問や、サービスについてのお問い合わせはこちらからどうぞ。</p>
+      {/* Google Form 送信用に action, method, target を設定 */}
+      <form
+        ref={formRef} // 参照を設定
+        className="contact-form"
+        onSubmit={handleSubmit}
+        action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSeRrM4_A7QTegaA7IgKjPBxg72TojfO4JzDDK7rCO6X6ggyPQ/formResponse"
+        method="POST"
+        target="hidden_iframe" // iframeをターゲットに指定
+      >
+        <div className="form-group">
+          <label htmlFor="name">お名前<span className="required">*</span></label>
+          <input
+            type="text"
+            id="name"
+            // Google Form の name 属性に変更
+            name="entry.1912207169"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            className={errors.name ? 'error-input' : ''}
+          />
+          {errors.name && <span className="error-message">{errors.name}</span>}
         </div>
-      ) : (
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="name">お名前 *</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="お名前を入力してください"
-              required
-            />
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="email">メールアドレス *</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="example@mail.com"
-              required
-            />
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="message">メッセージ *</label>
-            <textarea
-              id="message"
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              placeholder="お問い合わせ内容を入力してください"
-              rows="5"
-              required
-            ></textarea>
-          </div>
-          
-          {formStatus.error && (
-            <div className="form-error">
-              <p>{formStatus.message}</p>
-            </div>
-          )}
-          
-          <div className="form-actions">
-            <Button type="primary" submit>送信する</Button>
-          </div>
-        </form>
-      )}
-      
-      <style jsx>{`
-        .contact-form {
-          max-width: 600px;
-          margin: 0 auto;
-          padding: 1.5rem;
-          background-color: white;
-          border-radius: 8px;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        
-        .form-group {
-          margin-bottom: 1.5rem;
-        }
-        
-        label {
-          display: block;
-          margin-bottom: 0.5rem;
-          font-weight: 600;
-        }
-        
-        input, textarea {
-          width: 100%;
-          padding: 0.75rem;
-          border: 1px solid #ddd;
-          border-radius: 4px;
-          font-size: 1rem;
-          font-family: inherit;
-        }
-        
-        input:focus, textarea:focus {
-          outline: none;
-          border-color: var(--primary-color);
-          box-shadow: 0 0 0 2px rgba(255, 153, 102, 0.2);
-        }
-        
-        .form-error {
-          background-color: rgba(244, 67, 54, 0.1);
-          color: #f44336;
-          padding: 0.75rem;
-          border-radius: 4px;
-          margin-bottom: 1rem;
-        }
-        
-        .form-success {
-          text-align: center;
-          padding: 2rem 0;
-        }
-        
-        .form-success h4 {
-          color: var(--success-color);
-          margin-bottom: 1rem;
-        }
-        
-        .form-actions {
-          display: flex;
-          justify-content: center;
-        }
-      `}</style>
+
+        <div className="form-group">
+          <label htmlFor="email">メールアドレス<span className="required">*</span></label>
+          <input
+            type="email" // emailタイプの方が適切
+            id="email"
+             // Google Form の name 属性に変更
+            name="entry.225433882"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className={errors.email ? 'error-input' : ''}
+            placeholder="返信不要の場合は「返信不要」と入力"
+          />
+          {errors.email && <span className="error-message">{errors.email}</span>}
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="message">お問い合わせ内容<span className="required">*</span></label>
+          <textarea
+            id="message"
+             // Google Form の name 属性に変更
+            name="entry.664562810"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            rows="6"
+            required
+            className={errors.message ? 'error-input' : ''}
+          ></textarea>
+          {errors.message && <span className="error-message">{errors.message}</span>}
+        </div>
+
+        {status && <p className={`status-message ${errors && Object.keys(errors).length > 0 ? 'error' : ''}`}>{status}</p>}
+
+        <Button type="submit" disabled={status === '送信中...'}>
+          送信する
+        </Button>
+      </form>
+      {/* 送信処理用の非表示 iframe */}
+      <iframe
+        name="hidden_iframe"
+        id="hidden_iframe"
+        style={{ display: 'none' }}
+        onLoad={handleIframeLoad} // iframe のロード完了時に handleIframeLoad を呼び出す
+        title="hidden iframe for google form submission"
+      ></iframe>
     </div>
   );
 };
