@@ -1,5 +1,5 @@
 // /src/components/ContactForm.jsx
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Button from './UI/Button';
 import './ContactForm.css';
 
@@ -14,8 +14,13 @@ const ContactForm = () => {
   const [status, setStatus] = useState('');
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [formSubmitting, setFormSubmitting] = useState(false); // 送信試行フラグを追加
+  const [formSubmitting, setFormSubmitting] = useState(false);
   const formRef = useRef(null);
+
+  // ★ デバッグ: formSubmitting の状態変化を監視
+  useEffect(() => {
+    console.log(`formSubmitting state changed: ${formSubmitting}`);
+  }, [formSubmitting]);
 
   // バリデーション関数
   const validateForm = () => {
@@ -33,38 +38,34 @@ const ContactForm = () => {
 
   // iframe のロード完了ハンドラ
   const handleIframeLoad = () => {
-    // ★ formSubmitting が true の場合のみ、送信完了とみなす
+    console.log(`handleIframeLoad called. Current formSubmitting: ${formSubmitting}`); // ★ デバッグ
     if (formSubmitting) {
-      console.log('iframe loaded after submission attempt.');
-      setIsSubmitted(true); // 送信完了状態にする
+      console.log('Setting isSubmitted to true and formSubmitting to false.'); // ★ デバッグ
+      setIsSubmitted(true);
       setStatus('送信しました');
       setFormSubmitting(false); // フラグをリセット
-      // フォームの入力をクリア（任意）
-      // setName('');
-      // setEmail('');
-      // setMessage('');
     } else {
-      // これはコンポーネント初期ロード時のiframeロードなので無視
-      console.log('iframe loaded initially, ignoring.');
+      console.log('Initial iframe load, ignoring.'); // ★ デバッグ
     }
   };
 
   // フォーム送信処理 (Googleフォームへの送信はHTMLのactionに任せる)
   const handleSubmit = (event) => {
+    console.log('handleSubmit called.'); // ★ デバッグ
     setStatus('');
-    setErrors({}); // ★ エラーもクリア
+    setErrors({});
 
     if (!validateForm()) {
-      event.preventDefault(); // バリデーションエラー時は送信停止
+      event.preventDefault();
       setStatus('入力内容にエラーがあります。');
+      console.log('Validation failed.'); // ★ デバッグ
       return;
     }
 
-    // ★ バリデーション成功、送信試行フラグを立てる
-    setFormSubmitting(true);
+    console.log('Validation successful. Setting formSubmitting to true.'); // ★ デバッグ
+    setFormSubmitting(true); // 送信試行フラグを立てる
     setStatus('送信中...');
-    console.log('Form validation passed, setting submitting flag and allowing default submission...');
-
+    console.log('Allowing default form submission...'); // ★ デバッグ
     // event.preventDefault() は呼び出さない
   };
 
@@ -75,12 +76,25 @@ const ContactForm = () => {
         <h2>お問い合わせありがとうございます</h2>
         <p>内容を確認の上、担当者よりご連絡いたします。</p>
         <p>（返信不要と入力された場合、ご連絡はいたしません）</p>
-        <Button onClick={() => { setIsSubmitted(false); setFormSubmitting(false); /* stateをリセット */ }} type="secondary">
+        <Button onClick={() => {
+          console.log('Resetting form state.'); // ★ デバッグ
+          setIsSubmitted(false);
+          setFormSubmitting(false); // 確実にリセット
+          // 必要なら入力フィールドもクリア
+          setName('');
+          setEmail('');
+          setMessage('');
+          setStatus('');
+          setErrors({});
+        }} type="secondary">
           別の内容で問い合わせる
         </Button>
       </div>
     );
   }
+
+  // ★ デバッグ: レンダリング時の formSubmitting の値を確認
+  console.log(`Rendering form. formSubmitting: ${formSubmitting}, Button disabled: ${formSubmitting}`);
 
   return (
     <div className="contact-form-container">
