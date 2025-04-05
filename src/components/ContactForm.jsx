@@ -13,8 +13,9 @@ const ContactForm = () => {
   const [message, setMessage] = useState('');
   const [status, setStatus] = useState('');
   const [errors, setErrors] = useState({});
-  const [isSubmitted, setIsSubmitted] = useState(false); // 送信完了状態を追加
-  const formRef = useRef(null); // フォームへの参照
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [formSubmitting, setFormSubmitting] = useState(false); // 送信試行フラグを追加
+  const formRef = useRef(null);
 
   // バリデーション関数
   const validateForm = () => {
@@ -32,34 +33,40 @@ const ContactForm = () => {
 
   // iframe のロード完了ハンドラ
   const handleIframeLoad = () => {
-    console.log('iframe loaded, assuming submission complete.');
-    setIsSubmitted(true); // 送信完了状態にする
-    setStatus('送信しました'); // オプション: ステータスメッセージ
-    // フォームの入力をクリア（任意）
-    // setName('');
-    // setEmail('');
-    // setMessage('');
+    // ★ formSubmitting が true の場合のみ、送信完了とみなす
+    if (formSubmitting) {
+      console.log('iframe loaded after submission attempt.');
+      setIsSubmitted(true); // 送信完了状態にする
+      setStatus('送信しました');
+      setFormSubmitting(false); // フラグをリセット
+      // フォームの入力をクリア（任意）
+      // setName('');
+      // setEmail('');
+      // setMessage('');
+    } else {
+      // これはコンポーネント初期ロード時のiframeロードなので無視
+      console.log('iframe loaded initially, ignoring.');
+    }
   };
-
 
   // フォーム送信処理 (Googleフォームへの送信はHTMLのactionに任せる)
   const handleSubmit = (event) => {
-    setStatus(''); // ステータスクリア
+    setStatus('');
+    setErrors({}); // ★ エラーもクリア
+
     if (!validateForm()) {
-      event.preventDefault(); // バリデーションエラー時は送信を停止
+      event.preventDefault(); // バリデーションエラー時は送信停止
       setStatus('入力内容にエラーがあります。');
       return;
     }
-    // バリデーションが通れば、デフォルトのフォーム送信を実行させる
-    // そのため event.preventDefault() はここでは呼び出さない
-    setStatus('送信中...'); // 送信中の表示（実際にはiframeがロードされるまで）
-    console.log('Form validation passed, submitting to Google Forms via iframe...');
 
-    // 注意: ここでは event.preventDefault() を呼び出さないことで、
-    // form タグの action と target に基づく標準の送信が行われるようにします。
-    // 従来のfetchやAPI送信は不要です。
+    // ★ バリデーション成功、送信試行フラグを立てる
+    setFormSubmitting(true);
+    setStatus('送信中...');
+    console.log('Form validation passed, setting submitting flag and allowing default submission...');
+
+    // event.preventDefault() は呼び出さない
   };
-
 
   // 送信完了メッセージを表示
   if (isSubmitted) {
@@ -69,7 +76,7 @@ const ContactForm = () => {
         <p>内容を確認の上、担当者よりご連絡いたします。</p>
         <p>（返信不要と入力された場合、ご連絡はいたしません）</p>
         {/* 必要であればリセットボタンなどを追加 */}
-         <Button onClick={() => setIsSubmitted(false)} type="secondary">
+         <Button onClick={() => { setIsSubmitted(false); /* 必要なら他のstateもリセット */ }} type="secondary">
            別の内容で問い合わせる
          </Button>
       </div>
@@ -137,7 +144,7 @@ const ContactForm = () => {
 
         {status && <p className={`status-message ${errors && Object.keys(errors).length > 0 ? 'error' : ''}`}>{status}</p>}
 
-        <Button type="submit" disabled={status === '送信中...'}>
+        <Button type="submit" disabled={formSubmitting && !isSubmitted}>
           送信する
         </Button>
       </form>
