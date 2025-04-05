@@ -111,3 +111,22 @@
 .contact-form-container.submitted button {
   margin-top: 20px; /* リセットボタンの上マージン */
 }
+
+/* 改修中表示用のスタイル */
+.contact-form-container.maintenance {
+  text-align: center;
+  padding: 50px 30px; /* 余白を調整 */
+}
+
+.contact-form-container.maintenance h2 {
+  color: #555;
+}
+
+.contact-form-container.maintenance p {
+  color: #777;
+  line-height: 1.7;
+}
+
+/* .contact-form-container.maintenance a {
+  color: #6699FF;
+} */

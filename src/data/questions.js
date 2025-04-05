@@ -182,42 +182,42 @@ export const questions = [
     id: 25,
     text: "対立する見解の間に共通点を見出し、橋渡しをすることが得意だ",
     galaxyType: "オリオン",
-    soulType: "複合的",
+    soulType: "全般",
     directSpirituality: true
   },
   {
     id: 26,
     text: "自分の内なる矛盾や葛藤と向き合い、それを成長の糧にすることができる",
     galaxyType: "オリオン",
-    soulType: "複合的",
+    soulType: "全般",
     directSpirituality: true
   },
   {
     id: 27,
     text: "変化や混沌の中にこそ、新たな可能性が生まれると感じる",
     galaxyType: "オリオン",
-    soulType: "複合的",
+    soulType: "全般",
     directSpirituality: true
   },
   {
     id: 28,
     text: "物事を白黒はっきりさせたがり、グレーゾーンを受け入れるのが難しい",
     galaxyType: "オリオン",
-    soulType: "複合的",
+    soulType: "全般",
     directSpirituality: false
   },
   {
     id: 29,
     text: "過去のトラウマや痛みに囚われ、同じパターンを繰り返すことがある",
     galaxyType: "オリオン",
-    soulType: "複合的",
+    soulType: "全般",
     directSpirituality: false
   },
   {
     id: 30,
     text: "状況をコントロールしたい欲求が強く、流れに身を任せるのが難しい",
     galaxyType: "オリオン",
-    soulType: "複合的",
+    soulType: "全般",
     directSpirituality: false
   },
   
@@ -226,42 +226,42 @@ export const questions = [
     id: 31,
     text: "アイデアや直感が突然湧き上がってくることがあり、それが創造的な解決策につながる",
     galaxyType: "アンドロメダ",
-    soulType: "複合的",
+    soulType: "全般",
     directSpirituality: true
   },
   {
     id: 32,
     text: "他者の心の傷や痛みを感じ取り、癒しの言葉や行動を自然に提供できる",
     galaxyType: "アンドロメダ",
-    soulType: "複合的",
+    soulType: "全般",
     directSpirituality: true
   },
   {
     id: 33,
     text: "物事を多層的に捉え、一般的には見えない繋がりやパターンを感じることがある",
     galaxyType: "アンドロメダ",
-    soulType: "複合的",
+    soulType: "全般",
     directSpirituality: true
   },
   {
     id: 34,
     text: "理想と現実のギャップに苦しみ、失望や挫折を感じることが多い",
     galaxyType: "アンドロメダ",
-    soulType: "複合的",
+    soulType: "全般",
     directSpirituality: false
   },
   {
     id: 35,
     text: "現実世界の課題に直面するのを避け、空想や理想の世界に逃げることがある",
     galaxyType: "アンドロメダ",
-    soulType: "複合的",
+    soulType: "全般",
     directSpirituality: false
   },
   {
     id: 36,
     text: "自分の直感や感覚を他者に説明するのが難しく、誤解されることが多い",
     galaxyType: "アンドロメダ",
-    soulType: "複合的",
+    soulType: "全般",
     directSpirituality: false
   },
   
